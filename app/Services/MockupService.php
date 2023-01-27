@@ -71,37 +71,44 @@ class MockupService
             $layers->set($layer->index, $replacement);
         }
 
+        $output = Str::ulid() . '.' . $format;
+
         $layers->remove(0);
 
-        if ($zoom !== 100) {
-            $w = $image->getSize()->getWidth();
-            $h = $image->getSize()->getHeight();
-            $new_h = floor($h * ($zoom / 100));
-            $new_w = floor ($w * ($zoom / 100));
-
-            if ($w > $h) {
-                $resize_w = $w * $new_h / $h;
-                $resize_h = $new_h;
-            }
-            else {
-                $resize_w = $new_w;
-                $resize_h = $h * $new_w / $w;
-            }
-
-            $image->resize(new Box($resize_w, $resize_h));
-//                  ->crop(new Point(($resize_w - $new_w) / 2, ($resize_h - $new_h) / 2), new Box($new_w, $new_h));
-        }
+//        if ($zoom !== 100) {
+//            $w = $image->getSize()->getWidth();
+//            $h = $image->getSize()->getHeight();
+//            $new_h = floor($h * ($zoom / 100));
+//            $new_w = floor ($w * ($zoom / 100));
+//
+//            if ($w > $h) {
+//                $resize_w = $w * $new_h / $h;
+//                $resize_h = $new_h;
+//            }
+//            else {
+//                $resize_w = $new_w;
+//                $resize_h = $h * $new_w / $w;
+//            }
+//
+//            $result = $image->resize(new Box($resize_w, $resize_h))
+//                  ->crop(new Point(($resize_w - $new_w) / 2, ($resize_h - $new_h) / 2), new Box($new_w, $new_h))->get($format, [
+//                'jpeg_quality' => 80,
+//                'png_compression_level' => 3,
+//                'webp_quality' => 90
+//            ]);
+//        } else {
+            $result = $image->get($format, [
+                'jpeg_quality' => 80,
+                'png_compression_level' => 3,
+                'webp_quality' => 90
+            ]);
+//        }
 //
 //        if ($zoom !== 0) {
 //            $image->getImagick()->scaleImage(floor($image->getSize()->getWidth() * ($zoom / 100)), 0);
 //        }
 
-        $output = Str::ulid() . '.' . $format;
-        Storage::disk('s3-public')->put($output, $image->get($format, [
-            'jpeg_quality' => 80,
-            'png_compression_level' => 3,
-            'webp_quality' => 90
-        ]));
+        Storage::disk('s3-public')->put($output, $result);
 
         return $mockup->outputs()->create([
             'team_uuid' => $mockup->team_uuid,
