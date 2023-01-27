@@ -46,19 +46,18 @@ class MockupService
 
         foreach ($output as $layerData) {
             $mockup->layers()->create([
-               'label' => $layerData['label'],
-               'index' => $layerData['index'],
-               'width' => $layerData['width'],
-               'height' => $layerData['height'],
+                'label' => $layerData['label'],
+                'index' => $layerData['index'],
+                'width' => $layerData['width'],
+                'height' => $layerData['height'],
             ]);
         }
 
         return $output;
     }
 
-    public function generate(Mockup $mockup, array $replacements, string $format, ?int $zoom = 0): MockupOutput
+    public function generate(Mockup $mockup, array $replacements, string $format, int $zoom, int $quality): MockupOutput
     {
-        $zoom ??= 100;
         $imagine = new Imagine();
         $imageBlob = Storage::disk('s3')->readStream($mockup->file_path);
 
@@ -97,11 +96,7 @@ class MockupService
 //                'webp_quality' => 90
 //            ]);
 //        } else {
-            $result = $image->get($format, [
-                'jpeg_quality' => 80,
-                'png_compression_level' => 3,
-                'webp_quality' => 80
-            ]);
+        $result = $image->get($format, $this->getQualityLookup($quality));
 //        }
 //
 //        if ($zoom !== 0) {
@@ -123,5 +118,26 @@ class MockupService
         $imagine = new Imagine();
 
         return $imagine->read($imageBlob);
+    }
+
+    private function getQualityLookup(int $quality): array
+    {
+        return match ($quality) {
+            0 => [
+                'jpeg_quality' => 80,
+                'png_compression_level' => 7,
+                'webp_quality' => 50
+            ],
+            1 => [
+                'jpeg_quality' => 50,
+                'png_compression_level' => 5,
+                'webp_quality' => 50
+            ],
+            2 => [
+                'jpeg_quality' => 80,
+                'png_compression_level' => 3,
+                'webp_quality' => 80
+            ],
+        };
     }
 }

@@ -29,9 +29,10 @@ class GenerateMockupController
 
         $output = $this->service->generate(
             $mockup,
-            $request->validated('replacement'),
+            $request->validated('replacements'),
             $request->validated('format'),
-            $request->validated('zoom'),
+            $request->validated('zoom', 100),
+            $request->validated('quality', 1),
         );
 
         $output = Storage::disk('s3-public')->url($output->file_path);
