@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignUlid('team_id')->index()->after('uuid');
+            $table->foreignUlid('team_uuid')->index()->after('uuid');
         });
     }
 
@@ -26,7 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['team_id']);
+            $table->dropColumn(['team_uuid']);
         });
     }
 };

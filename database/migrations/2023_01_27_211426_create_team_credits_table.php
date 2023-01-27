@@ -8,10 +8,13 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('{{ table }}', function (Blueprint $table) {
+        Schema::create('team_credits', function (Blueprint $table) {
             $table->ulid();
 
-
+            $table->foreignUlid('team_uuid')->index();
+            $table->unsignedTinyInteger('type');
+            $table->unsignedSmallInteger('limit');
+            $table->timestamp('expires_at')->nullable();
 
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
@@ -20,6 +23,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('{{ table }}');
+        Schema::dropIfExists('team_credits');
     }
 };

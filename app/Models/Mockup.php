@@ -16,4 +16,9 @@ class Mockup extends Model
     {
         return $this->hasMany(MockupLayer::class);
     }
+
+    public function outputs(): HasMany
+    {
+        return $this->hasMany(MockupOutput::class);
+    }
 }

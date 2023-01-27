@@ -8,10 +8,12 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('{{ table }}', function (Blueprint $table) {
+        Schema::create('mockup_outputs', function (Blueprint $table) {
             $table->ulid();
 
-
+            $table->foreignUlid('mockup_uuid')->index();
+            $table->foreignUlid('team_uuid')->index();
+            $table->string('file_path');
 
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
@@ -20,6 +22,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('{{ table }}');
+        Schema::dropIfExists('mockup_outputs');
     }
 };

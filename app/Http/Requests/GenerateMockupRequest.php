@@ -9,8 +9,9 @@ class GenerateMockupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'replacement' => ['required'],
-            'format' => ['required', 'in:png,webp,jpg']
+            'replacement' => ['required', 'size:' . $this->route('mockup')->layers()->count()],
+            'format' => ['required', 'in:png,webp,jpg'],
+            'zoom' => ['nullable', 'int', 'between:0,200']
         ];
     }
 }

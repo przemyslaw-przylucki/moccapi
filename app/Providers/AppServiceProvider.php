@@ -5,6 +5,7 @@ namespace App\Providers;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Schema\Builder;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,6 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         Model::unguard();
+        Builder::defaultMorphKeyType('ulid');
     }
 
     /**
