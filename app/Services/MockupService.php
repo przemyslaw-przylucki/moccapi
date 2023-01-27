@@ -100,7 +100,7 @@ class MockupService
             $result = $image->get($format, [
                 'jpeg_quality' => 80,
                 'png_compression_level' => 3,
-                'webp_quality' => 90
+                'webp_quality' => 80
             ]);
 //        }
 //
