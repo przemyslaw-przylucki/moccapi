@@ -37,14 +37,11 @@ class GenerateMockupController
 
         $output = Storage::disk('s3-public')->url($output->file_path);
 
-        return view('test', [
-            'src' => $output,
-        ]);
-
         return response()->json([
             'url' => $output,
             'name' => $mockup->name,
             'zoom' => $request->validated('zoom'),
+            'quality' => $request->validated('quality'),
         ]);
     }
 
