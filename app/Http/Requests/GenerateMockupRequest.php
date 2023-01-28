@@ -12,7 +12,7 @@ class GenerateMockupRequest extends FormRequest
             'replacements' => ['required', 'size:' . $this->route('mockup')->layers()->count()],
             'format' => ['required', 'in:png,webp,jpg'],
             'zoom' => ['nullable', 'int', 'between:0,200'],
-            'quality' => ['nullable', 'int', 'between:0,1,2']
+            'quality' => ['nullable', 'int', 'between:0,2']
         ];
     }
 }
