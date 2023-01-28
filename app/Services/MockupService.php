@@ -20,11 +20,6 @@ class MockupService
 
         $output = [];
 
-        $mockup->update([
-            'width' => $imagine->getSize()->getWidth(),
-            'height' => $imagine->getSize()->getHeight(),
-        ]);
-
         foreach ($imagine->layers() as $index => $layer) {
             if (! $index) {
                 continue;
