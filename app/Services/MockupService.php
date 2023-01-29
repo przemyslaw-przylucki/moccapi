@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Storage;
 
 class MockupService
 {
+    public function __construct()
+    {
+        Imagick::setResourceLimit(Imagick::RESOURCETYPE_MEMORY, 4_000_000_000);
+        IMagick::setResourceLimit(6, 2);
+//        Imagick::setResourceLimit(Imagick::RESOURCETYPE_DISK, config(''));
+//        Imagick::setResourceLimit(Imagick::RESOURCETYPE_AREA, config(''));
+//        Imagick::setResourceLimit(Imagick::RESOURCETYPE_FILE, config(''));
+    }
+
     public function extractLayers(Mockup $mockup): array
     {
         $imagine = $this->read($mockup);
@@ -53,14 +62,11 @@ class MockupService
 
     public function generate(Mockup $mockup, array $replacements, string $format, int $zoom, int $quality): MockupOutput
     {
-        $imagine = new Imagine();
-        $imageBlob = Storage::disk('s3')->readStream($mockup->file_path);
-
-        $image = $imagine->read($imageBlob);
+        $image = $this->read($mockup);
         $layers = $image->layers();
 
         foreach ($mockup->layers as $index => $layer) {
-            $replacementImage = $imagine->read(fopen($replacements[$index], 'rb'));
+            $replacementImage = (new Imagine())->read(fopen($replacements[$index], 'rb'));
             $replacement = $layers->get($layer->index)->paste($replacementImage->resize(new Box($layer->width, $layer->height)), new Point(0, 0));
             $layers->set($layer->index, $replacement);
         }
